@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicación prácticas</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+</head>
+<body>
+   <div class="contenedor-principal">
+    <nav class="sidebar">
+        <h2>Menú</h2>
+        <ul>
+            <li><a href="#inicio" onclick="verSeccion('inicio')">Inicio</a></li>
+            <li><a href="#gestion" onclick="verSeccion('gestion')">Gestión</a></li>
+            <li><a href="#proveedores" onclick="verSeccion('proveedores')">Proveedores</a></li>
+            <li><a href="#compras" onclick ="verSeccion('compras')">Compras</a></li>
+            <li><a href="#configuracion" onclick = "verSeccion('configuracion')">Configuración</a></li>
+            </ul>
+    </nav>
+    <main class="contenido">
+        <header>
+            <h1 id="titulo-principal">Panel de control</h1>
+        </header>
+        <section id="pantalla">
+            <p>Selecciona una opción del menú</p>
+        </section>
+    </main>
+</div>
+   </div>
+   <script src="app.js"></script>
+</body>
+</html>
