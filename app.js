@@ -28,7 +28,7 @@ function verSeccion(seccion, filtro = null) {
     let puntosApps = localStorage.getItem("puntos_apps") || "0";
     let nivelApps = localStorage.getItem("nivel_apps") || "Pendiente";
     let colorSost =
-      puntosSostenibilidad > 20
+      puntosSostenibilidad > 50
         ? "#2ecc71"
         : puntosSostenibilidad > 10
           ? "#f1c40f"
@@ -384,6 +384,7 @@ function verSeccion(seccion, filtro = null) {
 
    <button onclick="exportarCopiaSeguridad()" class="boton-ajuste">Descargar copia (.json)</button>
 
+
    <label class="boton-ajuste" style="cursor:pointer;">
 
    Cargar copia (Importar)
@@ -434,6 +435,26 @@ function verSeccion(seccion, filtro = null) {
 
    <div id="lista-mermas-taller"></div>
 
+  <div class="seccion-exportar">
+   <h4><i class="fas fa-file-export"></i> Panel de Exportación</h4>
+   <div class="contenedor-exportacion">
+   <div class="export-card">
+   <h5>Proveedores</h5>
+   <button onclick="descargarCualquierCSV(listaProveedores, ['Nombre', 'Producto', 'Fecha'], ['nombre', 'producto', 'fecha'], 'proveedores')" class="btn-csv">CSV</button>
+   <button onclick="descargarJSON(listaProveedores, 'proveedores')" class="btn-json">JSON</button>
+   </div>
+<div class="export-card">
+<h5>Inventario</h5>
+<button onclick="descargarCualquierCSV(inventario, ['Nombre', 'Cantidad', 'Categoria'], ['nombre', 'cantidad', 'categoria'], 'inventario')" class="btn-csv">CSV</button>
+<button onclick="descargarJSON(inventario, 'inventario')" class="btn-json">JSON</button>
+</div>
+<div class="export-card">
+<h5>Historial Compras</h5>
+<button onclick="descargarCualquierCSV(historialCompras, ['Fecha', 'Proveedor', 'Cantidad', 'Precio'], ['fecha', 'proveedor', 'cantidad', 'precio'], 'compras')" class="btn-csv">CSV</button>
+<button onclick="descargarJSON(historialCompras, 'compras')" class="btn-json">JSON</button>
+   </div>
+   </div>
+</div>
    `;
   }
 
@@ -712,7 +733,7 @@ function registrarEnHistorial(proveedor, cantidad) {
 
     cantidad: cantidad,
 
-    precioTotal: (precioUnitario * cantidad).toFixed(2),
+    precio: (precioUnitario * cantidad).toFixed(2),
   };
 
   historialCompras.unshift(nuevaCompra);
@@ -776,7 +797,7 @@ function pintarHistorial() {
 
             <td><span class="numero-stock" style="font-size:1em">${c.cantidad}</span></td>
 
-            <td style="font-weight:bold; color:var(--color-primario)">${c.precioTotal}€</td>
+            <td style="font-weight:bold; color:var(--color-primario)">${c.precio}€</td>
 
             </tr>
 
@@ -1231,4 +1252,66 @@ function exportarTestCSV(tipoDeAuditoria) {
     enlace.download = `informe_${datosTest.tipo}.csv`;
     enlace.click();
 
+}
+
+
+   function descargarCualquierCSV(lista, cabeceras, claves, nombreArchivo) {
+    if (!lista || lista.length === 0) return alert("No hay datos");
+
+    let csv = cabeceras.join(",") + "\n";
+    lista.forEach(objeto => {
+        let fila = claves.map(key => {
+            let valor = objeto[key] || "";
+            
+            return `"${String(valor).replace(/"/g, '""')}"`;
+        }).join(",");
+        csv += fila + "\n";
+    });
+
+    const BOM = "\uFEFF"; 
+    const blob = new Blob([BOM + csv], { type: "text/csv;charset=utf-8;" });
+
+    crearEnlaceDescarga(blob, `${nombreArchivo}.csv`);
+};
+
+
+function descargarJSON(lista, nombreArchivo){
+  if (!lista || lista.length === 0) {
+    return alert("No hay datos para exportar.");
+  }
+  const listaLimpia = lista.map(objeto => {
+    let nuevoObjeto = {...objeto};
+    for(let clave in nuevoObjeto){
+      let valor = nuevoObjeto[clave];
+      if (clave.toLowerCase().includes('fecha')) {
+        const d = new Date(valor);
+        if (!isNaN(d)) {
+          nuevoObjeto[clave] = d.toISOString().split('T')[0];
+        }
+      }
+      if ((valor === null || valor === "" || valor === undefined) &&
+    (clave === 'precio' || clave === 'cantidad' || clave === 'precio_total')) {
+      nuevoObjeto[clave] = 0;
+        
+      }
+    }
+    return nuevoObjeto;
+  });
+  const dataStr = JSON.stringify(listaLimpia, null, 2);
+  const blob = new Blob([dataStr], {type: "application/json"});
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = `${nombreArchivo}.json`;
+  enlace.click();
+  URL.revokeObjectURL(url);
+}
+
+function crearEnlaceDescarga(blob, nombreConExtension) {
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = nombreConExtension;
+    enlace.click();
+    URL.revokeObjectURL(url);
 }

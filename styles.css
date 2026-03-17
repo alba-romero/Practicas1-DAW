@@ -172,6 +172,8 @@ select:focus {
 .btn-principal,
 .boton-ajuste,
 .boton-peligro,
+.btn-cerrar
+.btn-guardar
 .btn-control {
   padding: 12px 24px;
   border-radius: 8px;
@@ -194,6 +196,47 @@ select:focus {
   background-color: var(--color-peligro);
   color: white;
 }
+
+.btn-csv, .btn-json{
+padding: 8px 16px;
+border: none;
+border-radius: 6px;
+font-weight: 600;
+cursor: pointer;
+transition: all 0.3s ease;
+display: flex;
+align-items: center;
+gap: 5px;
+font-size: 0.9rem;
+}
+
+.btn-csv{
+  background-color: #27ae60;
+  margin-bottom: 15px;
+  color: white;
+}
+
+.btn-csv:hover{
+  background-color: #219150;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-json{
+  background-color: #2980b9;
+  color: white;
+}
+
+.btn-json:hover{
+  background-color: #2471a3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(41,128,185,0.3);
+}
+
+.btn-csv:active, .btn-json:active{
+  transform: translateY(0);
+}
+
 .boton-ajuste {
   background-color: var(--fondo-secundario);
   color: var(--color-texto);
@@ -238,4 +281,28 @@ button:hover {
   font-weight: bold;
   color: var(--color-primario);
   opacity: 0.8;
+}
+
+.formulario-proveedor input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    outline: none;
+    transition: all 0.3s;
+}
+
+.formulario-proveedor input:focus {
+    border-color: #7d5a50;
+    box-shadow: 0 0 5px rgba(125, 90, 80, 0.2);
+}
+
+
+.formulario-proveedor label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
 }
